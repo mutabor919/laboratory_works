@@ -121,9 +121,14 @@ unordered_array_set unordered_array_set_symmetricDifference(unordered_array_set 
 }
 
 void unordered_array_set_print(unordered_array_set set) {
+    printf("{");
     for (size_t i = 0; i < set.size; i++) {
-        printf("%d ", set.data[i]);
+        printf("%d", set.data[i]);
+        if (i < set.size - 1) {
+            printf(", ");
+        }
     }
+    printf("}\n");
 }
 
 void unordered_array_set_delete(unordered_array_set *set) {
