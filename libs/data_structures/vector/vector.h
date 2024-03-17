@@ -2,6 +2,7 @@
 #define INC_13_LABA_VECTOR_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 typedef struct vector {
     int *data; // указатель на элементы вектора
@@ -23,5 +24,29 @@ void shrinkToFit(vector *vector);
 
 //освобождает память, выделенную вектору.
 void deleteVector(vector *vector);
+
+// проверка на то, является ли вектор пустым.
+bool isEmpty(vector *vector);
+
+// проверка на то, что вектор полный.
+bool isFull(vector *vector);
+
+// возвращает i-ый элемент вектора v.
+int getVectorValue(vector *vector, size_t i);
+
+//добавляет элемент x в конец вектора v.
+void pushBack(vector *vector, int x);
+
+//удаляет последний элемент из вектора.
+void popBack(vector *vector);
+
+//возвращает указатель на index-ый элемент вектора.
+int *atVector(vector *vector, size_t index);
+
+//возвращает указатель на последний элемент вектора.
+int *back(vector *vector);
+
+// возвращает указатель на нулевой элемент вектора.
+int *front(vector *vector);
 
 #endif //INC_13_LABA_VECTOR_H

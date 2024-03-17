@@ -42,3 +42,53 @@ void deleteVector(vector *vector) {
     vector->size = 0;
     vector->capacity =0;
 }
+
+bool isEmpty(vector *vector) {
+    return vector->size == 0;
+}
+
+bool isFull(vector *vector) {
+    return vector->size == vector->capacity && vector->size != 0;
+}
+
+int getVectorValue(vector *vector, size_t i) {
+    return i < vector->size ? vector->data[i] : -1;
+}
+
+void pushBack(vector *v, int x) {
+    if (v->capacity == 0)
+        reserve(v, 1);
+    else if (isFull(v))
+        reserve(v, v->capacity * 2);
+    v->data[v->size] = x;
+    v->size++;
+}
+
+
+void popBack(vector *vector) {
+    if (isEmpty(vector)) {
+        fprintf(stderr, "empty");
+        exit(1);
+    } else {
+        vector->size--;
+        shrinkToFit(vector);
+    }
+}
+
+int *atVector(vector *vector, size_t index) {
+    if (index >= vector->size) {
+        fprintf(stderr, "IndexError: a[%llu] is not exists", index);
+        exit(1);
+    }
+    return &vector->data[index];
+}
+
+int *back(vector *vector) {
+    return &vector->data[vector->size - 1];
+}
+
+int *front(vector *vector) {
+    return &vector->data[0];
+}
+
+
