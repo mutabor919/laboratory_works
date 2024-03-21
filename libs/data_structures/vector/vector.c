@@ -40,7 +40,7 @@ void shrinkToFit(vector *vector) {
 void deleteVector(vector *vector) {
     free(vector->data);
     vector->size = 0;
-    vector->capacity =0;
+    vector->capacity = 0;
 }
 
 bool isEmpty(vector *vector) {

@@ -10,7 +10,7 @@ void test_pushBackVector_emptyVector() {
     assert(v.capacity == 1);
 }
 
-void test_pushBackVector_fullVector(){
+void test_pushBackVector_fullVector() {
     vector v = createVector(2);
     pushBack(&v, 20);
     pushBack(&v, 40);
@@ -57,7 +57,7 @@ void test_back_oneElementInVector() {
     assert(last_element == 20);
 }
 
-void test_front_oneElementInVector(){
+void test_front_oneElementInVector() {
     vector v = createVector(2);
     pushBack(&v, 10);
     pushBack(&v, 20);
