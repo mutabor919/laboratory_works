@@ -98,11 +98,7 @@ void test() {
 }
 
 int main() {
-    matrix m = getMemMatrix(3,3);
-    inputMatrix(&m);
-    printMatrix(m);
-    printf("\n");
-    swapRows(m, 0, 2);
-    printMatrix(m);
+    test();
+    printf("All tests passed!\n");
     return 0;
 }

@@ -29,3 +29,10 @@
 103	158	7330758052333754	13_laba.exe	2f0671577f6f3727
 3	51	7330758379235481	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
 51	108	7330758379787183	13_laba.exe	2f0671577f6f3727
+2	160	7337805509811270	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+8	164	7337805509849939	libs/data_structures/CMakeFiles/data_structures.dir/matrix/matrix.c.obj	92fdee53ec3b6396
+164	210	7337805510302656	libs/data_structures/libdata_structures.a	82ebf9114faf8e9c
+2	62	7337805649766583	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+3	82	7337810049800966	libs/data_structures/CMakeFiles/data_structures.dir/matrix/matrix.c.obj	92fdee53ec3b6396
+82	118	7337810050164453	libs/data_structures/libdata_structures.a	82ebf9114faf8e9c
+118	175	7337810050697163	13_laba.exe	2f0671577f6f3727
