@@ -2,33 +2,30 @@
 #include <windows.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\matrix\matrix.h"
 
-position getLeftMin(matrix m) {
-    int min = m.values[0][0];
-    int min_by_row = 0;
-    int min_by_column = 0;
-
-    for (int i = 0; i < m.nCols; i++) {
-        for (int j = 0; j < m.nRows; j++) {
-            if (m.values[j][i] < min) {
-                min = m.values[j][i];
-                min_by_row = j;
-                min_by_column = i;
-            }
+bool isNonDescendingSorted(int *a, int n) {
+    for (int i = 1; i < n; i++) {
+        if (a[i] < a[i - 1]) {
+            return false;
         }
     }
-    return (position) {min_by_row, min_by_column};
+    return true;
 }
 
-void swapPenultimateRow(matrix m) {
-    position min_position = getLeftMin(m);
-    int min_element_column[m.nRows];
-    for (int i = 0; i < m.nRows; ++i) {
-        min_element_column[i] = m.values[i][min_position.colIndex];
+bool hasAllNonDescendingRows(matrix m) {
+    for (int i = 0; i < m.nRows; i++) {
+        if (!isNonDescendingSorted(m.values[i], m.nCols)) {
+            return false;
+        }
     }
+    return true;
+}
 
-    for (size_t i = 0; i < m.nRows; i++) {
-        m.values[m.nRows - 2][i] = min_element_column[i];
-    }
+int countNonDescendingRowsMatrices(matrix *ms, int nMatrix) {
+    int quantity_matrices = 0;
+    for (int i = 0; i < nMatrix; i++)
+        if (hasAllNonDescendingRows(ms[i]))
+            quantity_matrices += 1;
+    return quantity_matrices;
 }
 
 int main() {
@@ -37,11 +34,13 @@ int main() {
     printf("Введите количество рядов и столбцов: ");
     scanf("%d %d", &quantity_rows, &quantity_columns);
 
-    matrix m = getMemMatrix(quantity_rows, quantity_columns);
-    printf("Введите элементы матрицы: ");
-    inputMatrix(&m);
-    swapPenultimateRow(m);
-    printMatrix(m);
+    int quantity_matrices;
+    printf("Введите количество матриц: ");
+    scanf("%d", &quantity_matrices);
+
+    matrix *ms = getMemArrayOfMatrices(quantity_matrices, quantity_rows, quantity_columns);
+    inputMatrices(ms, quantity_matrices);
+    printf("%d", countNonDescendingRowsMatrices(ms, quantity_matrices));
 
     return 0;
 }
