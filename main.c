@@ -1,32 +1,36 @@
 #include <stdio.h>
 #include <windows.h>
+#include <math.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\matrix\matrix.h"
 
-int getMin(int *a, int left, int right) {
-    int min_element = a[left];
-    for (int i = left + 1; i <= right; i++) {
-        if (a[i] < min_element)
-            min_element = a[i];
+float getDistance(int *a, int n) {
+    float distance = 0;
+    for (int i = 0; i < n; i++) {
+        distance += a[i] * a[i];
     }
-    return min_element;
+    return sqrt(distance);
 }
 
-int getMinInArea(matrix m) {
-    int min_in_selected_area;
-    position max_element = getMaxValuePos(m);
-    int left = max_element.colIndex;
-    int right = max_element.colIndex;
-    for (int i = max_element.rowIndex; i >= 0; i--) {
-        int minInRow = getMin(m.values[i], left, right);
-
-        if (i == max_element.rowIndex || minInRow < min_in_selected_area)
-            min_in_selected_area = minInRow;
-        if (right < m.nCols - 1)
-            right++;
-        if (left > 0)
-            left--;
+void insertionSortRowsMatrixByRowCriteriaF(matrix m, float (*criteria)(int *, int)) {
+    float criteria_array[m.nRows];
+    for (int i = 0; i < m.nRows; i++) {
+        criteria_array[i] = criteria(m.values[i], m.nCols);
     }
-    return min_in_selected_area;
+
+    for (int i = 1; i < m.nRows; i++) {
+        float t = criteria_array[i];
+        int j = i;
+        while (j > 0 && criteria_array[j - 1] > t) {
+            criteria_array[j] = criteria_array[j - 1];
+            swapRows(m, j, j - 1);
+            j--;
+        }
+        criteria_array[j] = t;
+    }
+}
+
+void sortByDistances(matrix m) {
+    insertionSortRowsMatrixByRowCriteriaF(m, getDistance);
 }
 
 int main() {
@@ -36,9 +40,9 @@ int main() {
     scanf("%d %d", &quantity_rows, &quantity_columns);
 
     matrix m = getMemMatrix(quantity_rows, quantity_columns);
-    printf("Введите элементы матрицы: ");
     inputMatrix(&m);
-    printf("%d", getMinInArea(m));
+    sortByDistances(m);
+    printMatrix(m);
 
     return 0;
 }
