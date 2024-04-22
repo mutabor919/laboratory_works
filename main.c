@@ -2,40 +2,31 @@
 #include <windows.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\matrix\matrix.h"
 
-int getSum(int *a, int n) {
-    int sum = 0;
-    for (int i = 0; i < n; i++) {
-        sum += a[i];
+int getMin(int *a, int left, int right) {
+    int min_element = a[left];
+    for (int i = left + 1; i <= right; i++) {
+        if (a[i] < min_element)
+            min_element = a[i];
     }
-    return sum;
+    return min_element;
 }
 
-int max2(int a, int b) {
-    return a > b ? a : b;
-}
+int getMinInArea(matrix m) {
+    int min_in_selected_area;
+    position max_element = getMaxValuePos(m);
+    int left = max_element.colIndex;
+    int right = max_element.colIndex;
+    for (int i = max_element.rowIndex; i >= 0; i--) {
+        int minInRow = getMin(m.values[i], left, right);
 
-long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
-    int quantity = m.nRows + m.nCols - 2;
-    int max_pseudo_diagonal[quantity];
-
-    for (size_t i = 0; i < quantity; i++) {
-        max_pseudo_diagonal[i] = 0;
+        if (i == max_element.rowIndex || minInRow < min_in_selected_area)
+            min_in_selected_area = minInRow;
+        if (right < m.nCols - 1)
+            right++;
+        if (left > 0)
+            left--;
     }
-
-    int i_pseudo_diagonal;
-    for (int i = 0; i < m.nRows; i++) {
-        for (int j = 0; j < m.nCols; j++) {
-            if (j != i) {
-                if (i > j) {
-                    i_pseudo_diagonal = j - i + m.nRows - 1;
-                } else {
-                    i_pseudo_diagonal = j - i + m.nRows - 2;
-                }
-                max_pseudo_diagonal[i_pseudo_diagonal] = max2(max_pseudo_diagonal[i_pseudo_diagonal], m.values[i][j]);
-            }
-        }
-    }
-    return getSum(max_pseudo_diagonal, quantity);
+    return min_in_selected_area;
 }
 
 int main() {
@@ -47,7 +38,7 @@ int main() {
     matrix m = getMemMatrix(quantity_rows, quantity_columns);
     printf("Введите элементы матрицы: ");
     inputMatrix(&m);
-    printf("%lld", findSumOfMaxesOfPseudoDiagonal(m));
+    printf("%d", getMinInArea(m));
 
     return 0;
 }
