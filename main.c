@@ -22,9 +22,11 @@ bool hasAllNonDescendingRows(matrix m) {
 
 int countNonDescendingRowsMatrices(matrix *ms, int nMatrix) {
     int quantity_matrices = 0;
-    for (int i = 0; i < nMatrix; i++)
-        if (hasAllNonDescendingRows(ms[i]))
+    for (int i = 0; i < nMatrix; i++) {
+        if (hasAllNonDescendingRows(ms[i])) {
             quantity_matrices += 1;
+        }
+    }
     return quantity_matrices;
 }
 
