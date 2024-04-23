@@ -2,32 +2,42 @@
 #include <windows.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\matrix\matrix.h"
 
-bool isNonDescendingSorted(int *a, int n) {
-    for (int i = 1; i < n; i++) {
-        if (a[i] < a[i - 1]) {
-            return false;
+int countValues(const int *a, int n, int value) {
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (a[i] == value) {
+            count += 1;
         }
     }
-    return true;
+    return count;
 }
 
-bool hasAllNonDescendingRows(matrix m) {
+int countZeroRows(matrix m) {
+    int count_zero_rows = 0;
     for (int i = 0; i < m.nRows; i++) {
-        if (!isNonDescendingSorted(m.values[i], m.nCols)) {
-            return false;
+        if (countValues(m.values[i], m.nCols, 0) == m.nCols) {
+            count_zero_rows += 1;
         }
     }
-    return true;
+    return count_zero_rows;
 }
 
-int countNonDescendingRowsMatrices(matrix *ms, int nMatrix) {
-    int quantity_matrices = 0;
+void printMatrixWithMaxZeroRows(matrix *ms, int nMatrix) {
+    int zero_rows_matrix[nMatrix];
+    int maxZeroRows = 0;
     for (int i = 0; i < nMatrix; i++) {
-        if (hasAllNonDescendingRows(ms[i])) {
-            quantity_matrices += 1;
+        int zero_rows = countZeroRows(ms[i]);
+        zero_rows_matrix[i] =zero_rows;
+        if (zero_rows > maxZeroRows)
+            maxZeroRows = zero_rows;
+    }
+
+    for (int i = 0; i < nMatrix; i++) {
+        if (zero_rows_matrix[i] == maxZeroRows) {
+            printMatrix(ms[i]);
+            printf("\n");
         }
     }
-    return quantity_matrices;
 }
 
 int main() {
@@ -42,7 +52,7 @@ int main() {
 
     matrix *ms = getMemArrayOfMatrices(quantity_matrices, quantity_rows, quantity_columns);
     inputMatrices(ms, quantity_matrices);
-    printf("%d", countNonDescendingRowsMatrices(ms, quantity_matrices));
+    printMatrixWithMaxZeroRows(ms, quantity_matrices);
 
     return 0;
 }
