@@ -2,40 +2,31 @@
 #include <windows.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\matrix\matrix.h"
 
-int countValues(const int *a, int n, int value) {
-    int count = 0;
-    for (int i = 0; i < n; i++) {
-        if (a[i] == value) {
-            count += 1;
-        }
-    }
-    return count;
-}
-
-int countZeroRows(matrix m) {
-    int count_zero_rows = 0;
+int maxAbsoluteValue(matrix m) {
+    int max = abs(m.values[0][0]);
     for (int i = 0; i < m.nRows; i++) {
-        if (countValues(m.values[i], m.nCols, 0) == m.nCols) {
-            count_zero_rows += 1;
+        for (int j = 0; j < m.nCols; j++) {
+            int absolut_value = abs(m.values[i][j]);
+            if (absolut_value > max) {
+                max = absolut_value;
+            }
         }
     }
-    return count_zero_rows;
+    return max;
 }
 
-void printMatrixWithMaxZeroRows(matrix *ms, int nMatrix) {
-    int zero_rows_matrix[nMatrix];
-    int maxZeroRows = 0;
-    for (int i = 0; i < nMatrix; i++) {
-        int zero_rows = countZeroRows(ms[i]);
-        zero_rows_matrix[i] =zero_rows;
-        if (zero_rows > maxZeroRows)
-            maxZeroRows = zero_rows;
+void printMatrixWithMinAbsolutValue(matrix *ms, int n) {
+    int min_absolut_value = maxAbsoluteValue(ms[0]);
+    for (int i = 1; i < n; i++) {
+        int matrix_norm = maxAbsoluteValue(ms[i]);
+        if (matrix_norm < min_absolut_value) {
+            min_absolut_value = matrix_norm;
+        }
     }
 
-    for (int i = 0; i < nMatrix; i++) {
-        if (zero_rows_matrix[i] == maxZeroRows) {
+    for (int i = 0; i < n; i++) {
+        if (maxAbsoluteValue(ms[i]) == min_absolut_value) {
             printMatrix(ms[i]);
-            printf("\n");
         }
     }
 }
@@ -52,7 +43,7 @@ int main() {
 
     matrix *ms = getMemArrayOfMatrices(quantity_matrices, quantity_rows, quantity_columns);
     inputMatrices(ms, quantity_matrices);
-    printMatrixWithMaxZeroRows(ms, quantity_matrices);
+    printMatrixWithMinAbsolutValue(ms, quantity_matrices);
 
     return 0;
 }
