@@ -9,4 +9,6 @@ add_library(data_structures
         vector/vector.c
         matrix/matrix.c
         matrix/matrix.h
+        tests/test.c
+        tests/test.h
 )

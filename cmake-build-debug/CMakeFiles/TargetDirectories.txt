@@ -9,3 +9,6 @@ C:/Users/mutab/CLionProjects/13_laba/cmake-build-debug/libs/algorithms/CMakeFile
 C:/Users/mutab/CLionProjects/13_laba/cmake-build-debug/libs/data_structures/CMakeFiles/data_structures.dir
 C:/Users/mutab/CLionProjects/13_laba/cmake-build-debug/libs/data_structures/CMakeFiles/edit_cache.dir
 C:/Users/mutab/CLionProjects/13_laba/cmake-build-debug/libs/data_structures/CMakeFiles/rebuild_cache.dir
+C:/Users/mutab/CLionProjects/13_laba/cmake-build-debug/libs/str/CMakeFiles/str.dir
+C:/Users/mutab/CLionProjects/13_laba/cmake-build-debug/libs/str/CMakeFiles/edit_cache.dir
+C:/Users/mutab/CLionProjects/13_laba/cmake-build-debug/libs/str/CMakeFiles/rebuild_cache.dir
