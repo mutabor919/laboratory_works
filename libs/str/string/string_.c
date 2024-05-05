@@ -43,3 +43,18 @@ char *findSpaceReverse(char *rbegin, const char *rend) {
     }
     return rbegin;
 }
+
+int strcmp(const char *lhs, const char *rhs) {
+    while (*lhs && (*lhs == *rhs)) {
+        lhs++;
+        rhs++;
+    }
+    return *lhs - *rhs;
+}
+
+char *copy(const char *beginSource, const char *endSource, char *beginDestination) {
+    size_t length = endSource - beginSource;
+    memcpy(beginDestination, beginSource, sizeof(char) * length);
+    beginDestination[length] = '\0';
+    return beginDestination + length;
+}
