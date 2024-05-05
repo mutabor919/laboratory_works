@@ -16,4 +16,11 @@ char *findNonSpace(char *begin);
 /*возвращает указатель на первый пробельный символ, расположенный на ленте памяти начиная с адреса begin или на первый ноль-символ.*/
 char *findSpace(char *begin);
 
+/*возвращает указатель на первый справа символ, отличный от пробельных,расположенный на ленте памяти, начиная с rbegin и заканчивая rend.*/
+char *findNonSpaceReverse(char *rbegin, const char *rend);
+
+//возвращает указатель на первый пробельный символ справа, расположенный на ленте памяти, начиная с rbegin и заканчивая rend.*/
+char *findSpaceReverse(char *rbegin, const char *rend);
+
+
 #endif //INC_13_LABA_STRING__H
