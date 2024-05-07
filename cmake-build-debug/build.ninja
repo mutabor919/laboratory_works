@@ -322,6 +322,12 @@ build libs/str/CMakeFiles/str.dir/string/string_.c.obj: C_COMPILER__str_unscanne
   OBJECT_DIR = libs\str\CMakeFiles\str.dir
   OBJECT_FILE_DIR = libs\str\CMakeFiles\str.dir\string
 
+build libs/str/CMakeFiles/str.dir/test_string/tests.c.obj: C_COMPILER__str_unscanned_Debug C$:/Users/mutab/CLionProjects/13_laba/libs/str/test_string/tests.c || cmake_object_order_depends_target_str
+  DEP_FILE = libs\str\CMakeFiles\str.dir\test_string\tests.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = libs\str\CMakeFiles\str.dir
+  OBJECT_FILE_DIR = libs\str\CMakeFiles\str.dir\test_string
+
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target str
@@ -330,7 +336,7 @@ build libs/str/CMakeFiles/str.dir/string/string_.c.obj: C_COMPILER__str_unscanne
 #############################################
 # Link the static library libs\str\libstr.a
 
-build libs/str/libstr.a: C_STATIC_LIBRARY_LINKER__str_Debug libs/str/CMakeFiles/str.dir/string/string_.c.obj
+build libs/str/libstr.a: C_STATIC_LIBRARY_LINKER__str_Debug libs/str/CMakeFiles/str.dir/string/string_.c.obj libs/str/CMakeFiles/str.dir/test_string/tests.c.obj
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = libs\str\CMakeFiles\str.dir
   POST_BUILD = cd .
