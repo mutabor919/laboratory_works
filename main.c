@@ -1,43 +1,53 @@
 #include <stdio.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
-void digitToStartWithReverse(WordDescriptor word) {
-    char *endStringBuffer = copy(word.begin, word.end, _stringBuffer);
-    char *recPosition = copyIfReverse(endStringBuffer - 1, _stringBuffer - 1, word.begin, isdigit);
-    copyIf(_stringBuffer, endStringBuffer, recPosition, isalpha);
-}
-
-void digitToStartWithReverseForEveryWord(char *s) {
-    char *beginSearch = s;
-    WordDescriptor word;
-    while (getWord(beginSearch, &word)) {
-        digitToStartWithReverse(word);
-        beginSearch = word.end;
+void replaceDigitsToNumOfSpaces(char *s) {
+    copy(s, getEndOfString(s), _stringBuffer);
+    char *recPtr = s;
+    char *readPtr = _stringBuffer;
+    for (int i = 0; i < strlen(_stringBuffer); ++i) {
+        if (strlen(s) >= MAX_STRING_SIZE) {
+            exit(1);
+        }
+        if (!isdigit(_stringBuffer[i])) {
+            *recPtr = *readPtr;
+            recPtr++;
+            readPtr++;
+        } else {
+            int counter = _stringBuffer[i] - '0';
+            for (int j = counter; j > 0; --j) {
+                *recPtr = ' ';
+                recPtr++;
+            }
+            readPtr++;
+        }
     }
+    _stringBuffer[0] = '\0';
+    *recPtr = '\0';
 }
 
-void test_digitToStartWithReverseForEveryWord_nonDigits() {
-    char s[] = "Test for laboratory";
-    digitToStartWithReverseForEveryWord(s);
-    ASSERT_STRING("Test for laboratory", s);
+void test_replaceEachNumberWithSpaces_nonDigits() {
+    char s[] = "Test for laboratory 18";
+    replaceDigitsToNumOfSpaces(s);
+    ASSERT_STRING("Test for laboratory 18", s);
 }
 
-void test_digitToStartWithReverseForEveryWord_nonWords() {
-    char s[] = " ";
-    digitToStartWithReverseForEveryWord(s);
+void test_replaceEachNumberWithSpaces_nonWords() {
+    char s[] = "";
+    replaceDigitsToNumOfSpaces(s);
     ASSERT_STRING("", s);
 }
 
-void test_digitToStartWithReverseForEveryWord_withDigits() {
-    char s[] = "T29 f33";
-    digitToStartWithReverseForEveryWord(s);
-    ASSERT_STRING("92T 33f", s);
+void test_replaceEachNumberWithSpaces_withDigits() {
+    char s[] = "Test2 for2 laboratory8";
+    replaceDigitsToNumOfSpaces(s);
+    ASSERT_STRING("Test for laboratory", s);
 }
 
 int main() {
-    test_digitToStartWithReverseForEveryWord_nonWords();
-    test_digitToStartWithReverseForEveryWord_nonDigits();
-    test_digitToStartWithReverseForEveryWord_withDigits();
+    test_replaceEachNumberWithSpaces_nonWords();
+    test_replaceEachNumberWithSpaces_nonDigits();
+    test_replaceEachNumberWithSpaces_withDigits();
 
     return 0;
 }
