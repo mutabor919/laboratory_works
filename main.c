@@ -1,41 +1,43 @@
 #include <stdio.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
-void removeAdjacentEqualLetters(char *s) {
-    if ((s == NULL || strlen(s) == 0))
-        return;
-    int i, j;
-    for (i = 0, j = 0; s[i] != '\0'; i++) {
-        if (s[i] != s[i + 1]) {
-            s[j] = s[i];
-            j++;
-        }
+void digitToStartWithReverse(WordDescriptor word) {
+    char *endStringBuffer = copy(word.begin, word.end, _stringBuffer);
+    char *recPosition = copyIfReverse(endStringBuffer - 1, _stringBuffer - 1, word.begin, isdigit);
+    copyIf(_stringBuffer, endStringBuffer, recPosition, isalpha);
+}
+
+void digitToStartWithReverseForEveryWord(char *s) {
+    char *beginSearch = s;
+    WordDescriptor word;
+    while (getWord(beginSearch, &word)) {
+        digitToStartWithReverse(word);
+        beginSearch = word.end;
     }
-    s[j] = '\0';
 }
 
-void test_removeAdjacentEqualLetters_nonEqualLetters() {
-    char s[] = "Test";
-    removeAdjacentEqualLetters(s);
-    ASSERT_STRING("Test", s);
+void test_digitToStartWithReverseForEveryWord_nonDigits() {
+    char s[] = "Test for laboratory";
+    digitToStartWithReverseForEveryWord(s);
+    ASSERT_STRING("Test for laboratory", s);
 }
 
-void test_removeAdjacentEqualLetters_noWords() {
+void test_digitToStartWithReverseForEveryWord_nonWords() {
     char s[] = " ";
-    removeAdjacentEqualLetters(s);
-    ASSERT_STRING(" ", s);
+    digitToStartWithReverseForEveryWord(s);
+    ASSERT_STRING("", s);
 }
 
-void test_removeAdjacentEqualLetters_EqualLetters() {
-    char s[] = "TTTTeesssttttttffooooorr";
-    removeAdjacentEqualLetters(s);
-    ASSERT_STRING("Testfor", s);
+void test_digitToStartWithReverseForEveryWord_withDigits() {
+    char s[] = "T29 f33";
+    digitToStartWithReverseForEveryWord(s);
+    ASSERT_STRING("92T 33f", s);
 }
 
 int main() {
-    test_removeAdjacentEqualLetters_noWords();
-    test_removeAdjacentEqualLetters_nonEqualLetters();
-    test_removeAdjacentEqualLetters_EqualLetters();
+    test_digitToStartWithReverseForEveryWord_nonWords();
+    test_digitToStartWithReverseForEveryWord_nonDigits();
+    test_digitToStartWithReverseForEveryWord_withDigits();
 
     return 0;
 }

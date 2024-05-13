@@ -2,8 +2,8 @@
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
 void testStrlen() {
-    const char *str = "";
-    const char *str2 = "Test for laboratory 17";
+    char *str = "";
+    char *str2 = "Test for laboratory 17";
     size_t length1 = strlen_(str);
     size_t length2 = strlen_(str2);
     assert(length1 == 0 && length2 == 22);

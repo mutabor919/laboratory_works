@@ -12,7 +12,8 @@ __FILE__, __FUNCTION__, __LINE__)
 
 #define MAX_STRING_SIZE 100
 #define MAX_N_WORDS_IN_STRING 100
-#define MAX_WORD_SIZE 20
+
+char _stringBuffer[MAX_STRING_SIZE + 1];
 
 typedef struct WordDescriptor {
     char *begin; // позиция начала слова
@@ -25,7 +26,7 @@ typedef struct BagOfWords {
 } BagOfWords;
 
 //возвращает количество символов в строке.
-size_t strlen_(const char *begin);
+size_t strlen_(char *begin);
 
 /*возвращает указатель на первый элемент с кодом ch,расположенным на ленте памяти между адресами begin и end не включая end.*/
 char *find(char *begin, char *end, int ch);
@@ -52,7 +53,7 @@ char *copy(const char *beginSource, const char *endSource, char *beginDestinatio
 
 /*записывает по адресу beginDestination элементы из фрагмента памяти начиная с beginSource заканчивая endSource,
 удовлетворяющие функции-предикату f,возвращает указатель на следующий свободный для записи фрагмент в памяти.*/
-char *copyIf(char *beginSource, const char *endSource, char *beginDestination, int (*f)(char));
+char *copyIf(char *beginSource, const char *endSource, char *beginDestination, int (*f)(int));
 
 /*записывает по адресу beginDestination элементы из фрагмента памяти начиная с rbeginSource заканчивая rendSource,
 удовлетворяющие функции-предикату f, возвращает значение beginDestination по окончанию работы функции.*/

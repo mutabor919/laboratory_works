@@ -1,10 +1,10 @@
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
-size_t strlen_(const char *begin) {
+size_t strlen_(char *begin) {
     char *end = begin;
-    while (*end != '\0') {
+    while (*end != '\0')
         end++;
-    }
+
     return end - begin;
 }
 
@@ -59,7 +59,7 @@ char* copy(const char *beginSource, const char *endSource, char *beginDestinatio
     return beginDestination;
 }
 
-char *copyIf(char *beginSource, const char *endSource, char *beginDestination, int (*f)(char)) {
+char *copyIf(char *beginSource, const char *endSource, char *beginDestination, int (*f)(int)) {
     while (beginSource != endSource) {
         if (f(*beginSource)) {
             *beginDestination = *beginSource;
