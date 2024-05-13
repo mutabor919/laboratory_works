@@ -1,53 +1,50 @@
-#include <stdio.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
-void replaceDigitsToNumOfSpaces(char *s) {
-    copy(s, getEndOfString(s), _stringBuffer);
-    char *recPtr = s;
-    char *readPtr = _stringBuffer;
-    for (int i = 0; i < strlen(_stringBuffer); ++i) {
-        if (strlen(s) >= MAX_STRING_SIZE) {
-            exit(1);
-        }
-        if (!isdigit(_stringBuffer[i])) {
-            *recPtr = *readPtr;
-            recPtr++;
-            readPtr++;
-        } else {
-            int counter = _stringBuffer[i] - '0';
-            for (int j = counter; j > 0; --j) {
-                *recPtr = ' ';
+void replace(char *source, char *w1, char *w2) {
+    size_t size_w1 = strlen(w1);
+    size_t size_w2 = strlen(w2);
+    WordDescriptor word1 = {w1, w1 + size_w1};
+    WordDescriptor word2 = {w2, w2 + size_w2};
+    char *readPtr, *recPtr;
+    if (size_w1 >= size_w2) {
+        readPtr = source;
+        recPtr = source;
+    } else {
+        copy(source, getEndOfString(source), _stringBuffer);
+        readPtr = _stringBuffer;
+        recPtr = source;
+    }
+    while (*readPtr != '\0') {
+        if (memcmp(readPtr, w1, size_w1) == 0) {
+            for (int i = 0; i < size_w2; i++) {
+                *recPtr = w2[i];
                 recPtr++;
             }
+            readPtr += size_w1;
+        } else {
+            *recPtr = *readPtr;
             readPtr++;
+            recPtr++;
         }
     }
-    _stringBuffer[0] = '\0';
-    *recPtr = '\0';
 }
 
-void test_replaceEachNumberWithSpaces_nonDigits() {
-    char s[] = "Test for laboratory 18";
-    replaceDigitsToNumOfSpaces(s);
-    ASSERT_STRING("Test for laboratory 18", s);
-}
+void test_replace() {
+    char s[] = "Test for";
+    replace(s, "laboratory", "eighteen");
+    ASSERT_STRING("Test for", s);
 
-void test_replaceEachNumberWithSpaces_nonWords() {
-    char s[] = "";
-    replaceDigitsToNumOfSpaces(s);
-    ASSERT_STRING("", s);
-}
+    char s2[] = "";
+    replace(s2, "laboratory", "eighteen");
+    ASSERT_STRING("", s2);
 
-void test_replaceEachNumberWithSpaces_withDigits() {
-    char s[] = "Test2 for2 laboratory8";
-    replaceDigitsToNumOfSpaces(s);
-    ASSERT_STRING("Test for laboratory", s);
+    char s3[] = "Test for";
+    replace(s3, "for", "laboratory");
+    ASSERT_STRING("Test laboratory", s3);
 }
 
 int main() {
-    test_replaceEachNumberWithSpaces_nonWords();
-    test_replaceEachNumberWithSpaces_nonDigits();
-    test_replaceEachNumberWithSpaces_withDigits();
+    test_replace();
 
     return 0;
 }
