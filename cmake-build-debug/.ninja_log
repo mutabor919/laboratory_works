@@ -25,3 +25,14 @@
 5	45	7373326586848970	libs/str/libstr.a	72fe7f925fe8b73d
 2	54	7373326586930120	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
 54	109	7373326587459737	13_laba.exe	fbfd887cb0dd57af
+3	60	7373343167728356	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+5	68	7373343167821074	CMakeFiles/13_laba.dir/libs/str/string/string_.c.obj	8f75993d43c13b7f
+7	73	7373343167850518	libs/str/CMakeFiles/str.dir/test_string/tests.c.obj	157bb0bb63d7132f
+10	74	7373343167880052	libs/str/CMakeFiles/str.dir/string/string_.c.obj	7e49342f0c83b813
+74	112	7373343168263488	libs/str/libstr.a	72fe7f925fe8b73d
+2	58	7373343295766641	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+5	69	7373343295883975	CMakeFiles/13_laba.dir/libs/str/string/string_.c.obj	8f75993d43c13b7f
+7	70	7373343295899538	libs/str/CMakeFiles/str.dir/test_string/tests.c.obj	157bb0bb63d7132f
+9	73	7373343295931150	libs/str/CMakeFiles/str.dir/string/string_.c.obj	7e49342f0c83b813
+74	112	7373343296321451	libs/str/libstr.a	72fe7f925fe8b73d
+112	166	7373343296829463	13_laba.exe	fbfd887cb0dd57af
