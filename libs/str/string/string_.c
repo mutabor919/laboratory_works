@@ -105,10 +105,6 @@ char *getEndOfString(char *s) {
     return s + strlen(s);
 }
 
-int areWordsEqual(WordDescriptor w1, WordDescriptor w2) {
-    return strcmp(w1.begin, w2.begin);
-}
-
 void getBagOfWords(BagOfWords *bag, char *s) {
     char *beginSearch = s;
     bag->size = 0;
