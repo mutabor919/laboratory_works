@@ -50,16 +50,20 @@ int strcmp(const char *lhs, const char *rhs) {
     return *lhs - *rhs;
 }
 
-char *copy(const char *beginSource, const char *endSource, char *beginDestination) {
-    size_t length = endSource - beginSource;
-    memcpy(beginDestination, beginSource, sizeof(char) * length);
-    return beginDestination + length;
+char* copy(const char *beginSource, const char *endSource, char *beginDestination) {
+    while (beginSource != endSource) {
+        *beginDestination = *beginSource;
+        beginSource++;
+        beginDestination++;
+    }
+    return beginDestination;
 }
 
-char *copyIf(char *beginSource, const char *endSource, char *beginDestination, int (*f)(int)) {
+char *copyIf(char *beginSource, const char *endSource, char *beginDestination, int (*f)(char)) {
     while (beginSource != endSource) {
         if (f(*beginSource)) {
-            memcpy(beginDestination++, beginSource, sizeof(char));
+            *beginDestination = *beginSource;
+            beginDestination++;
         }
         beginSource++;
     }
@@ -75,4 +79,74 @@ char* copyIfReverse(char *rbeginSource, const char *rendSource, char *beginDesti
         rbeginSource--;
     }
     return beginDestination;
+}
+
+int getWord(char *beginSearch, WordDescriptor *word) {
+    word->begin = findNonSpace(beginSearch);
+    if (*word->begin == '\0')
+        return 0;
+
+    word->end = findSpace(word->begin);
+
+    return 1;
+}
+
+bool getWordReverse(char *rbegin, char *rend, WordDescriptor *word) {
+    word->end = findNonSpaceReverse(rbegin, rend) + 1;
+    if (word->end == rend)
+        return false;
+
+    word->begin = findSpaceReverse(word->end, rend) + 1;
+
+    return true;
+}
+
+char *getEndOfString(char *s) {
+    return s + strlen(s);
+}
+
+int areWordsEqual(WordDescriptor w1, WordDescriptor w2) {
+    return strcmp(w1.begin, w2.begin);
+}
+
+void getBagOfWords(BagOfWords *bag, char *s) {
+    char *beginSearch = s;
+    bag->size = 0;
+    WordDescriptor word;
+    while (getWord(beginSearch, &word)) {
+        bag->words[bag->size] = word;
+        bag->size++;
+        beginSearch = word.end;
+    }
+}
+
+char *copyReverse(char *rbeginSource, const char *rendSource, char *beginDestination) {
+    while (rbeginSource != rendSource) {
+        *beginDestination++ = *rbeginSource;
+
+        rbeginSource--;
+    }
+
+    return beginDestination;
+}
+
+bool isPalindrome(char *begin, char *end) {
+    end--;
+    while (end - begin > 0) {
+        if (*begin != *end)
+            return false;
+        begin++;
+        end--;
+    }
+    return true;
+}
+
+void assertString(const char *expected, char *got, char const *fileName, char const *funcName, int line) {
+    if (strcmp(expected, got)) {
+        fprintf(stderr, "File %s\n", fileName);
+        fprintf(stderr, "%s - failed on line %d\n", funcName, line);
+        fprintf(stderr, "Expected : \"%s \"\n", expected);
+        fprintf(stderr, "Got: \"%s\"\n\n", got);
+    } else
+        fprintf(stderr, "%s - OK\n", funcName);
 }
