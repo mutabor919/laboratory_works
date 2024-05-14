@@ -70,3 +70,9 @@
 57	115	7373911389432249	13_laba.exe	fbfd887cb0dd57af
 3	56	7373912643761823	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
 56	114	7373912644317657	13_laba.exe	fbfd887cb0dd57af
+3	65	7373932085055941	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+5	76	7373932085168514	CMakeFiles/13_laba.dir/libs/str/string/string_.c.obj	8f75993d43c13b7f
+8	76	7373932085179084	libs/str/CMakeFiles/str.dir/string/string_.c.obj	7e49342f0c83b813
+10	86	7373932085279461	libs/str/CMakeFiles/str.dir/test_string/tests.c.obj	157bb0bb63d7132f
+86	141	7373932085822965	libs/str/libstr.a	72fe7f925fe8b73d
+141	199	7373932086378417	13_laba.exe	fbfd887cb0dd57af

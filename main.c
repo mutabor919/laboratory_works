@@ -1,63 +1,72 @@
 #include <stdio.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
-typedef enum WordBeforeFirstWordWithAReturnCode {
-    FIRST_WORD_WITH_A,
-    NOT_FOUND_A_WORD_WITH_A,
-    WORD_FOUND,
-    EMPTY_STRING
-} WordBeforeFirstWordWithAReturnCode;
+int areWordsEqual(WordDescriptor w1, WordDescriptor w2) {
+    char *ptr1 = w1.begin;
+    char *ptr2 = w2.begin;
 
-WordBeforeFirstWordWithAReturnCode getWordBeforeFirstWordWithA(char *s, WordDescriptor *w) {
-    WordDescriptor word;
-    char *ptr = s;
-    char *prevWordEnd = NULL;
-    int foundAWord = 0;
-
-    while (getWord(&ptr, &word)) {
-        if (find(word.begin, word.end, 'a') != word.end) {
-            if (!foundAWord) {
-                *w = word;
-                return FIRST_WORD_WITH_A;
-            } else {
-                if (prevWordEnd != NULL) {
-                    w->begin = s;
-                    w->end = prevWordEnd;
-                    return WORD_FOUND;
-                } else {
-                    return EMPTY_STRING;
-                }
-            }
+    while (ptr1 != w1.end && ptr2 != w2.end) {
+        if (*ptr1 != *ptr2) {
+            return 0;
         }
-
-        prevWordEnd = word.end;
-        foundAWord = 1;
+        ptr1++;
+        ptr2++;
     }
 
-    if (ptr == s) {
-        return EMPTY_STRING;
-    }
-
-    return NOT_FOUND_A_WORD_WITH_A;
+    return ptr1 == w1.end && ptr2 == w2.end;
 }
 
-void test_getWordBeforeFirstWordWithA() {
+WordDescriptor lastWordInFirstStringInSecondString(char *s1, char *s2) {
+    BagOfWords bag1, bag2;
+    getBagOfWords(&bag1, s1);
+    getBagOfWords(&bag2, s2);
+
+    for (int i = bag1.size - 1; i >= 0; i--) {
+        WordDescriptor word = bag1.words[i];
+        for (int j = 0; j < bag2.size; j++) {
+            if (areWordsEqual(word, bag2.words[j])) {
+                return word;
+            }
+        }
+    }
+
+    WordDescriptor emptyWord = {"", ""};
+    return emptyWord;
+}
+
+void wordDescriptorToString(WordDescriptor word, char *destination) {
+    char *ptr = destination;
+    char *wordPtr = word.begin;
+    while (wordPtr != word.end) {
+        *ptr++ = *wordPtr++;
+    }
+    *ptr = '\0';
+}
+
+void test_lastWordInFirstStringInSecondString() {
+    char s1[] = "Test for laboratory eighteen";
+    char s2[] = "lab eighteen";
+    char s3[] = "laboratory";
+    char s4[] = "tests";
+
+    char result[MAX_WORD_SIZE];
     WordDescriptor word;
 
-    char s1[] = "ab for test";
-    char s2[] = "Test for eighteen";
-    char s3[] = "";
-    char s4[] = "Test for aboratory";
+    word = lastWordInFirstStringInSecondString(s1, s2);
+    wordDescriptorToString(word, result);
+    ASSERT_STRING("eighteen", result);
 
-    assert(getWordBeforeFirstWordWithA(s1, &word) == FIRST_WORD_WITH_A &&
-           getWordBeforeFirstWordWithA(s2, &word) == NOT_FOUND_A_WORD_WITH_A &&
-           getWordBeforeFirstWordWithA(s3, &word) == EMPTY_STRING &&
-           getWordBeforeFirstWordWithA(s4, &word) == WORD_FOUND);
+    word = lastWordInFirstStringInSecondString(s1, s3);
+    wordDescriptorToString(word, result);
+    ASSERT_STRING("laboratory", result);
 
+    word = lastWordInFirstStringInSecondString(s1, s4);
+    wordDescriptorToString(word, result);
+    ASSERT_STRING("", result);
 }
 
 int main() {
-    test_getWordBeforeFirstWordWithA();
+    test_lastWordInFirstStringInSecondString();
 
     return 0;
 }
