@@ -16,12 +16,26 @@ int areWordsEqual(WordDescriptor w1, WordDescriptor w2) {
     return ptr1 == w1.end && ptr2 == w2.end;
 }
 
-bool hasDuplicateWords(char *s) {
+void sortWord(WordDescriptor *word) {
+    for (char *i = word->begin; i < word->end - 1; i++) {
+        for (char *j = word->begin; j < word->end - 1; j++) {
+            if (*j > *(j + 1)) {
+                char temp = *j;
+                *j = *(j + 1);
+                *(j + 1) = temp;
+            }
+        }
+    }
+}
+
+bool hasPairOfWordsWithSameLetters(char *s) {
     BagOfWords bag;
     getBagOfWords(&bag, s);
 
-    for (int i = 0; i < bag.size - 1; i++) {
+    for (int i = 0; i < bag.size; i++) {
         for (int j = i + 1; j < bag.size; j++) {
+            sortWord(&bag.words[i]);
+            sortWord(&bag.words[j]);
             if (areWordsEqual(bag.words[i], bag.words[j])) {
                 return true;
             }
@@ -31,14 +45,20 @@ bool hasDuplicateWords(char *s) {
     return false;
 }
 
-void test_hasDuplicateWords() {
-    char s1[] = "Test for for lab eighteen";
-    char s2[] = "Test for laboratory eighteen";
-    assert(hasDuplicateWords(s1) == true && hasDuplicateWords(s2) == false);
+void test_hasPairOfWordsWithSameLetters() {
+    char s1[] = "Test for lab eighteen";
+    char s2[] = "";
+    char s4[] = "test tset";
+    char s5[] = "eighteen eenhtieg";
+
+    assert(hasPairOfWordsWithSameLetters(s1) == false);
+    assert(hasPairOfWordsWithSameLetters(s2) == false);
+    assert(hasPairOfWordsWithSameLetters(s4) == true);
+    assert(hasPairOfWordsWithSameLetters(s5) == true);
 }
 
 int main() {
-    test_hasDuplicateWords();
+    test_hasPairOfWordsWithSameLetters();
 
     return 0;
 }
