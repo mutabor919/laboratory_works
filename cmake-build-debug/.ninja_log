@@ -76,3 +76,5 @@
 10	86	7373932085279461	libs/str/CMakeFiles/str.dir/test_string/tests.c.obj	157bb0bb63d7132f
 86	141	7373932085822965	libs/str/libstr.a	72fe7f925fe8b73d
 141	199	7373932086378417	13_laba.exe	fbfd887cb0dd57af
+2	52	7373940214814629	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+53	109	7373940215353711	13_laba.exe	fbfd887cb0dd57af

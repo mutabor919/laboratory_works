@@ -16,57 +16,29 @@ int areWordsEqual(WordDescriptor w1, WordDescriptor w2) {
     return ptr1 == w1.end && ptr2 == w2.end;
 }
 
-WordDescriptor lastWordInFirstStringInSecondString(char *s1, char *s2) {
-    BagOfWords bag1, bag2;
-    getBagOfWords(&bag1, s1);
-    getBagOfWords(&bag2, s2);
+bool hasDuplicateWords(char *s) {
+    BagOfWords bag;
+    getBagOfWords(&bag, s);
 
-    for (int i = bag1.size - 1; i >= 0; i--) {
-        WordDescriptor word = bag1.words[i];
-        for (int j = 0; j < bag2.size; j++) {
-            if (areWordsEqual(word, bag2.words[j])) {
-                return word;
+    for (int i = 0; i < bag.size - 1; i++) {
+        for (int j = i + 1; j < bag.size; j++) {
+            if (areWordsEqual(bag.words[i], bag.words[j])) {
+                return true;
             }
         }
     }
 
-    WordDescriptor emptyWord = {"", ""};
-    return emptyWord;
+    return false;
 }
 
-void wordDescriptorToString(WordDescriptor word, char *destination) {
-    char *ptr = destination;
-    char *wordPtr = word.begin;
-    while (wordPtr != word.end) {
-        *ptr++ = *wordPtr++;
-    }
-    *ptr = '\0';
-}
-
-void test_lastWordInFirstStringInSecondString() {
-    char s1[] = "Test for laboratory eighteen";
-    char s2[] = "lab eighteen";
-    char s3[] = "laboratory";
-    char s4[] = "tests";
-
-    char result[MAX_WORD_SIZE];
-    WordDescriptor word;
-
-    word = lastWordInFirstStringInSecondString(s1, s2);
-    wordDescriptorToString(word, result);
-    ASSERT_STRING("eighteen", result);
-
-    word = lastWordInFirstStringInSecondString(s1, s3);
-    wordDescriptorToString(word, result);
-    ASSERT_STRING("laboratory", result);
-
-    word = lastWordInFirstStringInSecondString(s1, s4);
-    wordDescriptorToString(word, result);
-    ASSERT_STRING("", result);
+void test_hasDuplicateWords() {
+    char s1[] = "Test for for lab eighteen";
+    char s2[] = "Test for laboratory eighteen";
+    assert(hasDuplicateWords(s1) == true && hasDuplicateWords(s2) == false);
 }
 
 int main() {
-    test_lastWordInFirstStringInSecondString();
+    test_hasDuplicateWords();
 
     return 0;
 }
