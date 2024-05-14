@@ -1,64 +1,46 @@
 #include <stdio.h>
 #include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
-int areWordsEqual(WordDescriptor w1, WordDescriptor w2) {
-    char *ptr1 = w1.begin;
-    char *ptr2 = w2.begin;
-
-    while (ptr1 != w1.end && ptr2 != w2.end) {
-        if (*ptr1 != *ptr2) {
-            return 0;
-        }
-        ptr1++;
-        ptr2++;
-    }
-
-    return ptr1 == w1.end && ptr2 == w2.end;
-}
-
-void sortWord(WordDescriptor *word) {
-    for (char *i = word->begin; i < word->end - 1; i++) {
-        for (char *j = word->begin; j < word->end - 1; j++) {
-            if (*j > *(j + 1)) {
-                char temp = *j;
-                *j = *(j + 1);
-                *(j + 1) = temp;
-            }
-        }
-    }
-}
-
-bool hasPairOfWordsWithSameLetters(char *s) {
+char *getWordsExceptLast(char *s) {
     BagOfWords bag;
     getBagOfWords(&bag, s);
 
-    for (int i = 0; i < bag.size; i++) {
-        for (int j = i + 1; j < bag.size; j++) {
-            sortWord(&bag.words[i]);
-            sortWord(&bag.words[j]);
-            if (areWordsEqual(bag.words[i], bag.words[j])) {
-                return true;
-            }
-        }
+    if (bag.size <= 1) {
+        char *result = malloc(1);
+        result[0] = '\0';
+        return result;
+    }
+    size_t totalLength = 0;
+
+    for (int i = 0; i < bag.size - 1; i++) {
+        totalLength += strlen_(bag.words[i].begin) + 1;
     }
 
-    return false;
+    char *result = malloc(totalLength + 1);
+
+    char *ptr = result;
+    for (int i = 0; i < bag.size - 1; i++) {
+        ptr = copy(bag.words[i].begin, bag.words[i].end, ptr);
+        *ptr++ = ' ';
+    }
+    *--ptr = '\0';
+
+    return result;
 }
 
-void test_hasPairOfWordsWithSameLetters() {
+void test_getWordsExceptLast() {
     char s1[] = "Test for lab eighteen";
-    char s2[] = "";
-    char s4[] = "test tset";
-    char s5[] = "eighteen eenhtieg";
+    char s2[] = "Test for lab";
+    char s3[] = "";
 
-    assert(hasPairOfWordsWithSameLetters(s1) == false);
-    assert(hasPairOfWordsWithSameLetters(s2) == false);
-    assert(hasPairOfWordsWithSameLetters(s4) == true);
-    assert(hasPairOfWordsWithSameLetters(s5) == true);
+    ASSERT_STRING("Test for lab", getWordsExceptLast(s1));
+    ASSERT_STRING("Test for", getWordsExceptLast(s2));
+    ASSERT_STRING("", getWordsExceptLast(s3));
+
 }
 
 int main() {
-    test_hasPairOfWordsWithSameLetters();
+    test_getWordsExceptLast();
 
     return 0;
 }
