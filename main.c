@@ -1,48 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <math.h>
 #include <assert.h>
+#include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\vector\vector.h"
+#include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
 
-#include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\vector\vectorVoid.h"
-
-typedef struct monomial {
-    size_t degree;
-    double coefficient;
-} monomial;
-
-void generate_polynomial(const char *filename) {
-    srand(time(NULL));
-
-    FILE *file = fopen(filename, "wb");
-    if (file == NULL) {
-        printf("reading error\n");
-        exit(1);
-    }
-
-    int amount_polynomial = rand() % 5 + 2;
-
-    for (int k = 0; k < amount_polynomial; k++) {
-        int amount_monomial = rand() % 5 + 1;
-
-        monomial mono;
-        for (int i = 0; i <= amount_monomial; i++) {
-            mono.degree = amount_monomial - i;
-            mono.coefficient = 2.0 * rand() / RAND_MAX - 1.0;
-
-            fwrite(&mono, sizeof(monomial), 1, file);
-        }
-    }
-
-    fclose(file);
-}
-
-double get_monomial_value(monomial mono, double x) {
-    return pow(x, mono.degree) * mono.coefficient;
-}
-
-void remove_true_polynomial(const char *filename, double x) {
-    vectorVoid v = createVectorV(16, sizeof(monomial));
+void rearrange_numbers(const char *filename) {
+    vector positive_numbers = createVector(2);
+    vector negative_numbers = createVector(2);
 
     FILE *file = fopen(filename, "rb");
     if (file == NULL) {
@@ -50,9 +14,13 @@ void remove_true_polynomial(const char *filename, double x) {
         exit(1);
     }
 
-    monomial mono;
-    while (fread(&mono, sizeof(monomial), 1, file) == 1)
-        pushBackV(&v, &mono);
+    int current_number;
+    while (fread(&current_number, sizeof(int), 1, file) == 1) {
+        if (current_number >= 0)
+            pushBack(&positive_numbers, current_number);
+        else
+            pushBack(&negative_numbers, current_number);
+    }
 
     fclose(file);
 
@@ -62,143 +30,143 @@ void remove_true_polynomial(const char *filename, double x) {
         exit(1);
     }
 
-    monomial m;
-    vectorVoid temp = createVectorV(8, sizeof(monomial));
-    double result = 0;
-    for (size_t i = 0; i < v.size; i++) {
-        getVectorValueV(&v, i, &m);
-        pushBackV(&temp, &m);
-        result += get_monomial_value(m, x);
+    for (int i = 0; i < positive_numbers.size; i++)
+        fwrite(positive_numbers.data + i, sizeof(int), 1, file);
 
-        if (m.degree == 0) {
-            if (fabs(result) >= 0.001) {
-                monomial temp_mono;
-                for (size_t j = 0; j < temp.size; j++) {
-                    getVectorValueV(&temp, j, &temp_mono);
-                    fwrite(&temp_mono, sizeof(monomial), 1, file);
-                }
-            }
+    for (int i = 0; i < negative_numbers.size; i++)
+        fwrite(negative_numbers.data + i, sizeof(int), 1, file);
 
-            clearV(&temp);
-            result = 0;
-        }
-    }
-
-    deleteVectorV(&v);
-    deleteVectorV(&temp);
-
+    deleteVector(&positive_numbers);
+    deleteVector(&negative_numbers);
     fclose(file);
 }
 
-void print_polynomial(const char *filename) {
-    FILE *file = fopen(filename, "rb");
-    if (file == NULL) {
-        printf("reading error\n");
-        exit(1);
-    }
-
-    monomial mono;
-    while (fread(&mono, sizeof(monomial), 1, file) == 1) {
-        printf("%5.2lf * x^%lld + ", mono.coefficient, mono.degree);
-
-        if (mono.degree == 0)
-            printf("\b\b \n");
-    }
-
-    fclose(file);
-}
-
-void test_remove_true_polynomial_1_empty_file() {
+void test_rearrange_numbers_1_empty_file() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
     FILE *file = fopen(filename, "wb");
     fclose(file);
 
-    remove_true_polynomial(filename, 1.0);
+    rearrange_numbers(filename);
 
     file = fopen(filename, "rb");
 
     char data[10] = "";
-    fscanf(file, "%s", data);
+    fread(data, sizeof(data), 1, file);
 
     fclose(file);
 
     assert(strcmp(data, "") == 0);
 }
 
-void test_remove_true_polynomial_2_not_true_expression() {
+
+void test_rearrange_numbers_2_only_negative_numbers() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
-    double x = 2.0;
-    monomial x_2 = {.coefficient = 1.0, .degree = 2};
-    monomial x_1 = {.coefficient = -2.0, .degree = 1};
-    monomial c = {.coefficient = 1.0, .degree = 0};
+    int x1 = -1;
+    int x2 = -2;
+    int x3 = -3;
 
     FILE *file = fopen(filename, "wb");
 
-    fwrite(&x_2, sizeof(monomial), 1, file);
-    fwrite(&x_1, sizeof(monomial), 1, file);
-    fwrite(&c, sizeof(monomial), 1, file);
+    fwrite(&x1, sizeof(int), 1, file);
+    fwrite(&x2, sizeof(int), 1, file);
+    fwrite(&x3, sizeof(int), 1, file);
 
     fclose(file);
 
-    remove_true_polynomial(filename, x);
-
+    rearrange_numbers(filename);
 
     file = fopen(filename, "rb");
 
-    monomial res_x_2;
-    fread(&res_x_2, sizeof(monomial), 1, file);
-
-    monomial res_x_1;
-    fread(&res_x_1, sizeof(monomial), 1, file);
-
-    monomial res_c;
-    fread(&res_c, sizeof(monomial), 1, file);
+    int res_x1, res_x2, res_x3;
+    fread(&res_x1, sizeof(int), 1, file);
+    fread(&res_x2, sizeof(int), 1, file);
+    fread(&res_x3, sizeof(int), 1, file);
 
     fclose(file);
 
-    assert(x_2.coefficient - res_x_2.coefficient <= 0.0001 && x_2.degree == res_x_2.degree);
-    assert(x_1.coefficient - res_x_1.coefficient <= 0.0001 && x_1.degree == res_x_1.degree);
-    assert(c.coefficient - res_c.coefficient <= 0.0001 && c.degree == res_c.degree);
+    assert(x1 == res_x1);
+    assert(x2 == res_x2);
+    assert(x3 == res_x3);
 }
 
-void test_remove_true_polynomial_3_true_expression() {
+
+void test_rearrange_numbers_3_only_positive_numbers() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
-    double x = 1.0;
-    monomial x_2 = {.coefficient = 1.0, .degree = 2};
-    monomial x_1 = {.coefficient = -2.0, .degree = 1};
-    monomial c = {.coefficient = 1.0, .degree = 0};
+    int x1 = 1;
+    int x2 = 2;
+    int x3 = 3;
 
     FILE *file = fopen(filename, "wb");
 
-    fwrite(&x_2, sizeof(monomial), 1, file);
-    fwrite(&x_1, sizeof(monomial), 1, file);
-    fwrite(&c, sizeof(monomial), 1, file);
+    fwrite(&x1, sizeof(int), 1, file);
+    fwrite(&x2, sizeof(int), 1, file);
+    fwrite(&x3, sizeof(int), 1, file);
 
     fclose(file);
 
-    remove_true_polynomial(filename, x);
+    rearrange_numbers(filename);
 
     file = fopen(filename, "rb");
 
-    char data[10] = "";
-    fscanf(file, "%s", data);
+    int res_x1, res_x2, res_x3;
+    fread(&res_x1, sizeof(int), 1, file);
+    fread(&res_x2, sizeof(int), 1, file);
+    fread(&res_x3, sizeof(int), 1, file);
 
     fclose(file);
 
-    assert(strcmp(data, "") == 0);
+    assert(x1 == res_x1);
+    assert(x2 == res_x2);
+    assert(x3 == res_x3);
 }
 
-void test_remove_true_polynomial() {
-    test_remove_true_polynomial_1_empty_file();
-    test_remove_true_polynomial_2_not_true_expression();
-    test_remove_true_polynomial_3_true_expression();
+void test_rearrange_numbers_4_mixed_numbers() {
+    const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
+
+    int x1 = -1;
+    int x2 = 2;
+    int x3 = -3;
+    int x4 = 3;
+
+    FILE *file = fopen(filename, "wb");
+
+    fwrite(&x1, sizeof(int), 1, file);
+    fwrite(&x2, sizeof(int), 1, file);
+    fwrite(&x3, sizeof(int), 1, file);
+    fwrite(&x4, sizeof(int), 1, file);
+
+    fclose(file);
+
+    rearrange_numbers(filename);
+
+    file = fopen(filename, "rb");
+
+    int res_x1, res_x2, res_x3, res_x4;
+    fread(&res_x1, sizeof(int), 1, file);
+    fread(&res_x2, sizeof(int), 1, file);
+    fread(&res_x3, sizeof(int), 1, file);
+    fread(&res_x4, sizeof(int), 1, file);
+
+    fclose(file);
+
+    assert(res_x1 == x2);
+    assert(res_x2 == x4);
+    assert(res_x3 == x1);
+    assert(res_x4 == x3);
+}
+
+void test_rearrange_numbers() {
+    test_rearrange_numbers_1_empty_file();
+    test_rearrange_numbers_2_only_negative_numbers();
+    test_rearrange_numbers_3_only_positive_numbers();
+    test_rearrange_numbers_4_mixed_numbers();
 }
 
 int main() {
-    test_remove_true_polynomial();
+    test_rearrange_numbers();
 
     return 0;
 }
