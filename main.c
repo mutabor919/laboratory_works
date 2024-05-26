@@ -1,210 +1,204 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h>
+#include <math.h>
 #include <assert.h>
 
-#include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
+#include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\vector\vectorVoid.h"
 
-#define MAX_LINE_SIZE 100
+typedef struct monomial {
+    size_t degree;
+    double coefficient;
+} monomial;
 
-void generate_text_file(const char* filename, int lines, int word, int max_word_size) {
+void generate_polynomial(const char *filename) {
     srand(time(NULL));
 
-    FILE* file = fopen(filename, "w");
+    FILE *file = fopen(filename, "wb");
     if (file == NULL) {
         printf("reading error\n");
         exit(1);
     }
 
-    for (int i = 0; i < lines; i++) {
-        for (int j = 0; j < word; j++) {
-            for (int k = 0; k < rand() % max_word_size + 1; k++) {
-                fprintf(file, "%c", 'a' + rand() % 26);
-            }
-            fprintf(file, " ");
+    int amount_polynomial = rand() % 5 + 2;
+
+    for (int k = 0; k < amount_polynomial; k++) {
+        int amount_monomial = rand() % 5 + 1;
+
+        monomial mono;
+        for (int i = 0; i <= amount_monomial; i++) {
+            mono.degree = amount_monomial - i;
+            mono.coefficient = 2.0 * rand() / RAND_MAX - 1.0;
+
+            fwrite(&mono, sizeof(monomial), 1, file);
         }
-        fprintf(file, "\n");
     }
 
     fclose(file);
 }
 
-void leave_longest_word(const char* filename) {
-    FILE* file = fopen(filename, "r");
+double get_monomial_value(monomial mono, double x) {
+    return pow(x, mono.degree) * mono.coefficient;
+}
+
+void remove_true_polynomial(const char *filename, double x) {
+    vectorVoid v = createVectorV(16, sizeof(monomial));
+
+    FILE *file = fopen(filename, "rb");
     if (file == NULL) {
         printf("reading error\n");
         exit(1);
     }
 
-    char buff[MAX_LINE_SIZE] = "";
-    char* rec_ptr = _string_buffer;
-
-    fgets(buff, sizeof(buff), file);
-
-    size_t length = strlen_(buff);
-    length = length == 0 ? 1 : length;
-
-    rec_ptr = copy(buff, buff + length - 1, rec_ptr);
-    *rec_ptr++ = ' ';
-
-
-    size_t amount_word_in_line = 0;
-    char* begin_search = _string_buffer;
-    while (get_word_without_space(begin_search, &_bag.words[_bag.size])) {
-        begin_search = _bag.words[_bag.size].end + 1;
-        amount_word_in_line++;
-        _bag.size++;
-    }
-
-    while (fgets(buff, sizeof(buff), file)) {
-        rec_ptr = copy(buff, buff + strlen_(buff) - 1, rec_ptr);
-        *rec_ptr++ = ' ';
-
-        while (get_word_without_space(begin_search, &_bag.words[_bag.size])) {
-            begin_search = _bag.words[_bag.size].end + 1;
-            _bag.size++;
-        }
-    }
+    monomial mono;
+    while (fread(&mono, sizeof(monomial), 1, file) == 1)
+        pushBackV(&v, &mono);
 
     fclose(file);
 
-    file = fopen(filename, "w");
+    file = fopen(filename, "wb");
     if (file == NULL) {
         printf("reading error\n");
         exit(1);
     }
 
-    for (size_t i = 0; i < _bag.size; i += amount_word_in_line) {
-        word_descriptor word_max_length = _bag.words[i];
-        size_t max_length = word_max_length.end - word_max_length.begin + 1;
+    monomial m;
+    vectorVoid temp = createVectorV(8, sizeof(monomial));
+    double result = 0;
+    for (size_t i = 0; i < v.size; i++) {
+        getVectorValueV(&v, i, &m);
+        pushBackV(&temp, &m);
+        result += get_monomial_value(m, x);
 
-        for (size_t j = i + 1; j < i + amount_word_in_line; j++) {
-            size_t current_length = _bag.words[j].end - _bag.words[j].begin + 1;
-
-            if (current_length > max_length) {
-                word_max_length = _bag.words[j];
-                max_length = current_length;
+        if (m.degree == 0) {
+            if (fabs(result) >= 0.001) {
+                monomial temp_mono;
+                for (size_t j = 0; j < temp.size; j++) {
+                    getVectorValueV(&temp, j, &temp_mono);
+                    fwrite(&temp_mono, sizeof(monomial), 1, file);
+                }
             }
-        }
 
-        char* write_ptr = word_max_length.begin;
-        while (write_ptr <= word_max_length.end) {
-            fprintf(file, "%c", *write_ptr);
-            write_ptr++;
+            clearV(&temp);
+            result = 0;
         }
-
-        fprintf(file, "\n");
     }
 
-    free_bag(&_bag);
+    deleteVectorV(&v);
+    deleteVectorV(&temp);
+
     fclose(file);
 }
 
-void test_leave_longest_word_1_empty_file() {
+void print_polynomial(const char *filename) {
+    FILE *file = fopen(filename, "rb");
+    if (file == NULL) {
+        printf("reading error\n");
+        exit(1);
+    }
+
+    monomial mono;
+    while (fread(&mono, sizeof(monomial), 1, file) == 1) {
+        printf("%5.2lf * x^%lld + ", mono.coefficient, mono.degree);
+
+        if (mono.degree == 0)
+            printf("\b\b \n");
+    }
+
+    fclose(file);
+}
+
+void test_remove_true_polynomial_1_empty_file() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
-
-    FILE* file = fopen(filename, "w");
+    FILE *file = fopen(filename, "wb");
     fclose(file);
 
-    leave_longest_word(filename);
+    remove_true_polynomial(filename, 1.0);
 
-    file = fopen(filename, "r");
+    file = fopen(filename, "rb");
 
-    char data[100] = "";
-    fprintf(file, "%s", data);
+    char data[10] = "";
+    fscanf(file, "%s", data);
 
     fclose(file);
 
     assert(strcmp(data, "") == 0);
 }
 
-void test_leave_longest_word_2_one_element_in_line() {
+void test_remove_true_polynomial_2_not_true_expression() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
-    char line1[] = "abcd";
-    char line2[] = "efg";
-    char line3[] = "hi";
+    double x = 2.0;
+    monomial x_2 = {.coefficient = 1.0, .degree = 2};
+    monomial x_1 = {.coefficient = -2.0, .degree = 1};
+    monomial c = {.coefficient = 1.0, .degree = 0};
 
-    FILE* file = fopen(filename, "w");
+    FILE *file = fopen(filename, "wb");
 
-    fprintf(file, "%s \n", line1);
-    fprintf(file, "%s \n", line2);
-    fprintf(file, "%s \n", line3);
-
-    fclose(file);
-
-    leave_longest_word(filename);
-
-    file = fopen(filename, "r");
-
-    char res_line1[10] = "";
-    fscanf(file, "%s\n", res_line1);
-
-    char res_line2[10] = "";
-    fscanf(file, "%s\n", res_line2);
-
-    char res_line3[10] = "";
-    fscanf(file, "%s\n", res_line3);
+    fwrite(&x_2, sizeof(monomial), 1, file);
+    fwrite(&x_1, sizeof(monomial), 1, file);
+    fwrite(&c, sizeof(monomial), 1, file);
 
     fclose(file);
 
-    assert(strcmp(line1, res_line1) == 0);
-    assert(strcmp(line2, res_line2) == 0);
-    assert(strcmp(line3, res_line3) == 0);
+    remove_true_polynomial(filename, x);
+
+
+    file = fopen(filename, "rb");
+
+    monomial res_x_2;
+    fread(&res_x_2, sizeof(monomial), 1, file);
+
+    monomial res_x_1;
+    fread(&res_x_1, sizeof(monomial), 1, file);
+
+    monomial res_c;
+    fread(&res_c, sizeof(monomial), 1, file);
+
+    fclose(file);
+
+    assert(x_2.coefficient - res_x_2.coefficient <= 0.0001 && x_2.degree == res_x_2.degree);
+    assert(x_1.coefficient - res_x_1.coefficient <= 0.0001 && x_1.degree == res_x_1.degree);
+    assert(c.coefficient - res_c.coefficient <= 0.0001 && c.degree == res_c.degree);
 }
 
-void test_leave_longest_word_3_more_element_in_line() {
+void test_remove_true_polynomial_3_true_expression() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
-    char line1[] = "kkalsdf ssss ";
-    char line2[] = "efg qweqw ";
-    char line3[] = "hi my to ";
+    double x = 1.0;
+    monomial x_2 = {.coefficient = 1.0, .degree = 2};
+    monomial x_1 = {.coefficient = -2.0, .degree = 1};
+    monomial c = {.coefficient = 1.0, .degree = 0};
 
-    FILE* file = fopen(filename, "w");
+    FILE *file = fopen(filename, "wb");
 
-    fputs(line1, file);
-    fprintf(file, "\n");
-    fputs(line2, file);
-    fprintf(file, "\n");
-    fputs(line3, file);
-    fprintf(file, "\n");
+    fwrite(&x_2, sizeof(monomial), 1, file);
+    fwrite(&x_1, sizeof(monomial), 1, file);
+    fwrite(&c, sizeof(monomial), 1, file);
 
     fclose(file);
 
-    leave_longest_word(filename);
+    remove_true_polynomial(filename, x);
 
-    file = fopen(filename, "r");
+    file = fopen(filename, "rb");
 
-    char res_line1[10] = "";
-    fscanf(file, "%s\n", res_line1);
-
-    char res_line2[10] = "";
-    fscanf(file, "%s\n", res_line2);
-
-    char res_line3[10] = "";
-    fscanf(file, "%s\n", res_line3);
+    char data[10] = "";
+    fscanf(file, "%s", data);
 
     fclose(file);
 
-    char check1[] = "kkalsdf";
-    char check2[] = "qweqw";
-    char check3[] = "hi";
-
-    assert(strcmp(check1, res_line1) == 0);
-    assert(strcmp(check2, res_line2) == 0);
-    assert(strcmp(check3, res_line3) == 0);
+    assert(strcmp(data, "") == 0);
 }
 
-void test_leave_longest() {
-    test_leave_longest_word_1_empty_file();
-    test_leave_longest_word_2_one_element_in_line();
-    test_leave_longest_word_3_more_element_in_line();
+void test_remove_true_polynomial() {
+    test_remove_true_polynomial_1_empty_file();
+    test_remove_true_polynomial_2_not_true_expression();
+    test_remove_true_polynomial_3_true_expression();
 }
 
 int main() {
-    test_leave_longest();
+    test_remove_true_polynomial();
 
     return 0;
 }
