@@ -11,6 +11,16 @@ vector createVector(size_t n) {
     return (vector) {data, 0, n};
 }
 
+vector createVectorFromArray(int *arr, int size) {
+    vector v;
+    v.data = malloc(size * sizeof(int));
+    v.size = size;
+    for (int i = 0; i < size; i++) {
+        v.data[i] = arr[i];
+    }
+    return v;
+}
+
 void reserve(vector *vector, size_t new_capacity) {
     if (new_capacity == 0) {
         free(vector->data);

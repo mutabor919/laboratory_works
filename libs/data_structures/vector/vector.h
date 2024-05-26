@@ -13,6 +13,8 @@ typedef struct vector {
 // возвращает структуру-дескриптор вектор из n значений.
 vector createVector(size_t n);
 
+vector createVectorFromArray(int *arr, int size);
+
 //изменяет количество памяти, выделенное под хранение элементов вектора.
 void reserve(vector *vector, size_t new_capacity);
 
