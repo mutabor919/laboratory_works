@@ -1,172 +1,270 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
-#include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\vector\vector.h"
-#include "C:\Users\mutab\CLionProjects\13_laba\libs\str\string\string_.h"
+#include "C:\Users\mutab\CLionProjects\13_laba\libs\data_structures\matrix\matrix.h"
 
-void rearrange_numbers(const char *filename) {
-    vector positive_numbers = createVector(2);
-    vector negative_numbers = createVector(2);
+int is_symmetric(int n, int matrix[n][n]) {
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            if (matrix[i][j] != matrix[j][i])
+                return 0;
+    return 1;
+}
 
-    FILE *file = fopen(filename, "rb");
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void transpose(int n, int matrix[n][n]) {
+    for (int i = 0; i < n; i++)
+        for (int j = i + 1; j < n; j++)
+            swap(&matrix[i][j], &matrix[j][i]);
+}
+
+void transpose_non_symmetric_matrix(const char *filename) {
+    FILE *file = fopen(filename, "r+b");
     if (file == NULL) {
-        printf("reading error\n");
-        exit(1);
+        printf("Error opening file.\n");
+        return;
     }
 
-    int current_number;
-    while (fread(&current_number, sizeof(int), 1, file) == 1) {
-        if (current_number >= 0)
-            pushBack(&positive_numbers, current_number);
-        else
-            pushBack(&negative_numbers, current_number);
+    int n;
+    if (fread(&n, sizeof(int), 1, file) != 1) {
+        printf("Error reading matrix order.\n");
+        fclose(file);
+        return;
     }
 
-    fclose(file);
+    while (1) {
+        int matrix[n][n];
+        size_t read_count = fread(matrix, sizeof(int), n * n, file);
+        if (read_count != n * n) {
+            if (feof(file)) {
+                break;
+            } else {
+                printf("Error reading matrix.\n");
+                break;
+            }
+        }
 
-    file = fopen(filename, "wb");
-    if (file == NULL) {
-        printf("reading error\n");
-        exit(1);
+        if (!is_symmetric(n, matrix)) {
+            transpose(n, matrix);
+            fseek(file, -(long int) read_count * sizeof(int), SEEK_CUR);
+            fwrite(matrix, sizeof(int), read_count, file);
+            fseek(file, (long int) read_count * sizeof(int), SEEK_CUR);
+        }
     }
 
-    for (int i = 0; i < positive_numbers.size; i++)
-        fwrite(positive_numbers.data + i, sizeof(int), 1, file);
-
-    for (int i = 0; i < negative_numbers.size; i++)
-        fwrite(negative_numbers.data + i, sizeof(int), 1, file);
-
-    deleteVector(&positive_numbers);
-    deleteVector(&negative_numbers);
     fclose(file);
 }
 
-void test_rearrange_numbers_1_empty_file() {
+void test_transpose_non_symmetric_matrix_1_empty_matrix() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
+    int n = 0;
     FILE *file = fopen(filename, "wb");
+
+    fwrite(&n, sizeof(int), 1, file);
+
     fclose(file);
 
-    rearrange_numbers(filename);
 
     file = fopen(filename, "rb");
 
-    char data[10] = "";
-    fread(data, sizeof(data), 1, file);
+    int res_n;
+    fread(&res_n, sizeof(int), 1, file);
 
     fclose(file);
 
-    assert(strcmp(data, "") == 0);
+    assert(n == res_n);
 }
 
 
-void test_rearrange_numbers_2_only_negative_numbers() {
+void test_transpose_non_symmetric_matrix_2_one_matrices() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
-    int x1 = -1;
-    int x2 = -2;
-    int x3 = -3;
-
-    FILE *file = fopen(filename, "wb");
-
-    fwrite(&x1, sizeof(int), 1, file);
-    fwrite(&x2, sizeof(int), 1, file);
-    fwrite(&x3, sizeof(int), 1, file);
-
-    fclose(file);
-
-    rearrange_numbers(filename);
-
-    file = fopen(filename, "rb");
-
-    int res_x1, res_x2, res_x3;
-    fread(&res_x1, sizeof(int), 1, file);
-    fread(&res_x2, sizeof(int), 1, file);
-    fread(&res_x3, sizeof(int), 1, file);
-
-    fclose(file);
-
-    assert(x1 == res_x1);
-    assert(x2 == res_x2);
-    assert(x3 == res_x3);
-}
-
-
-void test_rearrange_numbers_3_only_positive_numbers() {
-    const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
-
+    int n = 1;
     int x1 = 1;
-    int x2 = 2;
-    int x3 = 3;
+    int x2 = 10;
 
     FILE *file = fopen(filename, "wb");
 
+    fwrite(&n, sizeof(int), 1, file);
     fwrite(&x1, sizeof(int), 1, file);
     fwrite(&x2, sizeof(int), 1, file);
-    fwrite(&x3, sizeof(int), 1, file);
 
     fclose(file);
 
-    rearrange_numbers(filename);
-
+    int res_n, res_x1, res_x2;
     file = fopen(filename, "rb");
 
-    int res_x1, res_x2, res_x3;
+    fread(&res_n, sizeof(int), 1, file);
     fread(&res_x1, sizeof(int), 1, file);
     fread(&res_x2, sizeof(int), 1, file);
-    fread(&res_x3, sizeof(int), 1, file);
 
     fclose(file);
 
-    assert(x1 == res_x1);
-    assert(x2 == res_x2);
-    assert(x3 == res_x3);
+    assert(res_n == n);
+    assert(res_x1 == x1);
+    assert(res_x2 == x2);
 }
 
-void test_rearrange_numbers_4_mixed_numbers() {
+
+void test_transpose_non_symmetric_matrix_3_symmetric_matrix() {
     const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
 
-    int x1 = -1;
-    int x2 = 2;
-    int x3 = -3;
-    int x4 = 3;
-
     FILE *file = fopen(filename, "wb");
 
-    fwrite(&x1, sizeof(int), 1, file);
-    fwrite(&x2, sizeof(int), 1, file);
-    fwrite(&x3, sizeof(int), 1, file);
-    fwrite(&x4, sizeof(int), 1, file);
+    int n = 3;
+    matrix m = createMatrixFromArray((int[]) {1, 0, 0,
+                                              0, 1, 0,
+                                              0, 0, 1}, 3, 3);
+
+    fwrite(&n, sizeof(int), 1, file);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fwrite(&m.values[i][j], sizeof(int), 1, file);
 
     fclose(file);
 
-    rearrange_numbers(filename);
+    transpose_non_symmetric_matrix(filename);
 
     file = fopen(filename, "rb");
 
-    int res_x1, res_x2, res_x3, res_x4;
-    fread(&res_x1, sizeof(int), 1, file);
-    fread(&res_x2, sizeof(int), 1, file);
-    fread(&res_x3, sizeof(int), 1, file);
-    fread(&res_x4, sizeof(int), 1, file);
+    int res_n;
+    fread(&res_n, sizeof(int), 1, file);
+    matrix res_m = getMemMatrix(res_n, res_n);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fread(&res_m.values[i][j], sizeof(int), 1, file);
 
     fclose(file);
 
-    assert(res_x1 == x2);
-    assert(res_x2 == x4);
-    assert(res_x3 == x1);
-    assert(res_x4 == x3);
+    assert(areTwoMatricesEqual(&res_m, &m));
+
+    freeMemMatrix(&m);
+    freeMemMatrix(&res_m);
 }
 
-void test_rearrange_numbers() {
-    test_rearrange_numbers_1_empty_file();
-    test_rearrange_numbers_2_only_negative_numbers();
-    test_rearrange_numbers_3_only_positive_numbers();
-    test_rearrange_numbers_4_mixed_numbers();
+
+void test_transpose_non_symmetric_matrix_4_non_symmetric_matrix() {
+    const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
+
+    FILE *file = fopen(filename, "wb");
+
+    int n = 3;
+    matrix m = createMatrixFromArray((int[]) {1, 2, 3,
+                                              4, 5, 6,
+                                              7, 8, 9}, 3, 3);
+
+    fwrite(&n, sizeof(int), 1, file);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fwrite(&m.values[i][j], sizeof(int), 1, file);
+
+    fclose(file);
+
+    transpose_non_symmetric_matrix(filename);
+
+    file = fopen(filename, "rb");
+
+    int res_n;
+    fread(&res_n, sizeof(int), 1, file);
+    matrix res_m = getMemMatrix(res_n, res_n);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fread(&res_m.values[i][j], sizeof(int), 1, file);
+
+    fclose(file);
+
+    matrix check = createMatrixFromArray((int[]) {1, 4, 7,
+                                                  2, 5, 8,
+                                                  3, 6, 9}, 3, 3);
+
+    assert(res_n == n);
+    assert(areTwoMatricesEqual(&res_m, &check));
+
+    freeMemMatrix(&m);
+    freeMemMatrix(&res_m);
+    freeMemMatrix(&res_m);
+}
+
+
+void test_transpose_non_symmetric_matrix_5_mixed_matrix() {
+    const char filename[] = "C:\\Users\\mutab\\CLionProjects\\13_laba\\main.c";
+
+    FILE *file = fopen(filename, "wb");
+
+    int n = 3;
+    matrix m1 = createMatrixFromArray((int[]) {1, 0, 0,
+                                               0, 1, 0,
+                                               0, 0, 1}, 3, 3);
+
+    matrix m2 = createMatrixFromArray((int[]) {1, 2, 3,
+                                               4, 5, 6,
+                                               7, 8, 9}, 3, 3);
+
+    fwrite(&n, sizeof(int), 1, file);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fwrite(&m1.values[i][j], sizeof(int), 1, file);
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fwrite(&m2.values[i][j], sizeof(int), 1, file);
+
+    fclose(file);
+
+    transpose_non_symmetric_matrix(filename);
+
+    file = fopen(filename, "rb");
+
+    int res_n;
+    matrix check1 = createMatrixFromArray((int[]) {1, 0, 0,
+                                                   0, 1, 0,
+                                                   0, 0, 1}, 3, 3);
+    matrix check2 = createMatrixFromArray((int[]) {1, 4, 7,
+                                                   2, 5, 8,
+                                                   3, 6, 9}, 3, 3);
+
+    fread(&res_n, sizeof(int), 1, file);
+
+    matrix res_m1 = getMemMatrix(res_n, res_n);
+    matrix res_m2 = getMemMatrix(res_n, res_n);
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fread(&res_m1.values[i][j], sizeof(int), 1, file);
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            fread(&res_m2.values[i][j], sizeof(int), 1, file);
+
+    fclose(file);
+
+    assert(res_n == n);
+    assert(areTwoMatricesEqual(&res_m1, &check1));
+    assert(areTwoMatricesEqual(&res_m2, &check2));
+
+    freeMemMatrix(&m1);
+    freeMemMatrix(&m2);
+    freeMemMatrix(&res_m1);
+    freeMemMatrix(&res_m2);
+    freeMemMatrix(&check1);
+    freeMemMatrix(&check2);
+}
+
+void test_transpose_non_symmetric_matrix() {
+    test_transpose_non_symmetric_matrix_1_empty_matrix();
+    test_transpose_non_symmetric_matrix_2_one_matrices();
+    test_transpose_non_symmetric_matrix_3_symmetric_matrix();
+    test_transpose_non_symmetric_matrix_4_non_symmetric_matrix();
+    test_transpose_non_symmetric_matrix_5_mixed_matrix();
 }
 
 int main() {
-    test_rearrange_numbers();
+    test_transpose_non_symmetric_matrix();
 
     return 0;
 }
