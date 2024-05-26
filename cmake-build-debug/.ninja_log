@@ -1,16 +1,16 @@
 # ninja log v5
-2	195	7384458234807219	build.ninja	849d5a8f757b31e1
+2	195	7384463185807868	build.ninja	849d5a8f757b31e1
 6	211	7312598445864454	libs/algorithms/CMakeFiles/algorithms.dir/array/array.c.obj	911743cf7b1141b9
 15	206	7312598445864454	libs/data_structures/CMakeFiles/data_structures.dir/ordered_array_set/ordered_array_set.c.obj	3993549b100ca819
 1	122	7312583911977760	CMakeFiles/13_laba.dir/libs/algorithms/algorithm.c.obj	14907d05a5a95ab3
 9	202	7312598445853847	libs/data_structures/CMakeFiles/data_structures.dir/bitset/bitset.c.obj	941d9cea803cfb57
 10	127	7312583911977760	libs/algorithms/CMakeFiles/algorithms.dir/algorithm.c.obj	d4ad412e6f4d3826
-3	117	7384456724522341	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+2	60	7384459182621984	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
 3	75	7312598707419773	libs/algorithms/libalgorithms.a	56274bb85b86e754
 3	197	7312598445864454	CMakeFiles/13_laba.dir/libs/algorithms/array/array.c.obj	efd61f9d5b8508e8
 7	160	7323813488747081	libs/data_structures/CMakeFiles/data_structures.dir/unordered_array_set/unordered_array_set.c.obj	7482e9d80a8211a1
 156	240	7379946578812118	libs/data_structures/libdata_structures.a	1617bb061131e73d
-31	200	7384456868310370	13_laba.exe	27fa80795370b66f
+60	117	7384459183158926	13_laba.exe	fbfd887cb0dd57af
 7	156	7379946577963271	libs/data_structures/CMakeFiles/data_structures.dir/vector/vector.c.obj	24db2a6f7781a1a3
 10	180	7355665179008045	libs/data_structures/CMakeFiles/data_structures.dir/matrix/matrix.c.obj	92fdee53ec3b6396
 5	93	7355897304780669	libs/data_structures/CMakeFiles/data_structures.dir/tests/test.c.obj	9de9e6317084176f
@@ -20,7 +20,7 @@
 8	133	7366275429220804	CMakeFiles/13_laba.dir/libs/data_structures/unordered_array_set/unordered_array_set.c.obj	43fe7e0cae3d0aa9
 86	141	7373932085822965	libs/str/libstr.a	72fe7f925fe8b73d
 2	31	7384456866639199	CMakeFiles/13_laba.dir/libs/19_laboratory/19_laboratory.c.obj	76c2969a4f7e23cf
-2	59	7384458254991838	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
-59	115	7384458255526351	13_laba.exe	fbfd887cb0dd57af
-2	60	7384459182621984	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
-60	117	7384459183158926	13_laba.exe	fbfd887cb0dd57af
+6	63	7384465440130958	libs/data_structures/CMakeFiles/data_structures.dir/vector/vectorVoid.c.obj	1c962c1c578e36f6
+3	67	7384465440167926	CMakeFiles/13_laba.dir/main.c.obj	63808b09e3999d5a
+63	137	7384465440865555	libs/data_structures/libdata_structures.a	68fd6b6cdcd8fd9
+137	193	7384465441393899	13_laba.exe	fbfd887cb0dd57af
